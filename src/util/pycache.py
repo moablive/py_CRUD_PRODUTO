@@ -2,12 +2,19 @@ import shutil
 import os
 
 def limpar_pycache():
-    """Remove diretórios __pycache__ dentro do projeto."""
-    cache_dirs = ["menu/__pycache__", 
-                  "db/__pycache__"]  # Adicione mais diretórios conforme necessário
+    """Remove todos os diretórios __pycache__ dentro do projeto, percorrendo recursivamente."""
+    
+    projeto_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))  # Diretório raiz do projeto
 
-    for cache_dir in cache_dirs:
-        full_path = os.path.join(os.path.dirname(__file__), "..", cache_dir)  # Ajustando o caminho
-        if os.path.exists(full_path):
-            shutil.rmtree(full_path)
-            print(f"🗑️  Diretório {cache_dir} removido!")
+    for root, dirs, files in os.walk(projeto_root):
+        if "__pycache__" in dirs:
+            pycache_path = os.path.join(root, "__pycache__")
+            try:
+                shutil.rmtree(pycache_path)
+                print(f"🗑️  Diretório {pycache_path} removido!")
+            except Exception as e:
+                print(f"⚠️  Erro ao remover {pycache_path}: {e}")
+
+# Executar a função ao rodar o script
+if __name__ == "__main__":
+    limpar_pycache()
